@@ -7,6 +7,16 @@ class NewTransaction extends StatelessWidget {
   final Function onAddNewTransaction;
 
   NewTransaction({this.onAddNewTransaction});
+  void addNewTransaction() {
+    final enteredAmount = double.parse(amountController.text);
+    if (titleController.text == '') {
+      return;
+    }
+    if (amountController.text == '' || enteredAmount < 0) {
+      return;
+    }
+    onAddNewTransaction(titleController.text, enteredAmount);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +31,19 @@ class NewTransaction extends StatelessWidget {
               decoration: InputDecoration(labelText: 'Title'),
               // controller property is used for mapping the values in the TextEditController
               controller: titleController,
+              // the underscore means that we do not care about the value
+              // the reason we have to use it is because onSubmitted always requires a string but we do not use the string so (_) is used
+              onSubmitted: (_) => addNewTransaction(),
             ),
             TextField(
               decoration: InputDecoration(labelText: 'Amount'),
               // controller property is used for mapping the values in the TextEditController
               controller: amountController,
+              // use the keyboard type attribute to choose the type of keyboard
+              keyboardType: TextInputType.number,
+              // the underscore means that we do not care about the value
+              // the reason we have to use it is because onSubmitted always requires a string but we do not use the string so (_) is used
+              onSubmitted: (_) => addNewTransaction(),
             ),
             SizedBox(
               height: 10,
@@ -38,10 +56,7 @@ class NewTransaction extends StatelessWidget {
               ),
               color: Colors.red[400],
               textColor: Colors.white,
-              onPressed: () {
-                onAddNewTransaction(
-                    titleController.text, double.parse(amountController.text));
-              },
+              onPressed: addNewTransaction,
             )
           ],
         ),
