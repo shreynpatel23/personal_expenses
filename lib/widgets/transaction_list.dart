@@ -22,7 +22,8 @@ class TransactionList extends StatelessWidget {
                   ),
                   padding: EdgeInsets.all(10),
                   child: Text(
-                    userTransaction[index].amount.toString(),
+                    // use this ToStringAsFixed property of string to round off the decimal to 2 values.
+                    userTransaction[index].amount.toStringAsFixed(2),
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
