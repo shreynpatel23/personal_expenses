@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 
-class NewTransaction extends StatelessWidget {
+class NewTransaction extends StatefulWidget {
   // use this text editing comtroller to capture the input value in the variable
-  final titleController = TextEditingController();
-  final amountController = TextEditingController();
   final Function onAddNewTransaction;
 
   NewTransaction({this.onAddNewTransaction});
+
+  @override
+  _NewTransactionState createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
+  final titleController = TextEditingController();
+
+  final amountController = TextEditingController();
+
   void addNewTransaction() {
     final enteredAmount = double.parse(amountController.text);
     if (titleController.text == '') {
@@ -15,7 +23,9 @@ class NewTransaction extends StatelessWidget {
     if (amountController.text == '' || enteredAmount < 0) {
       return;
     }
-    onAddNewTransaction(titleController.text, enteredAmount);
+    widget.onAddNewTransaction(titleController.text, enteredAmount);
+    // to close the top most screen use the navigator.pop method
+    Navigator.of(context).pop();
   }
 
   @override
@@ -54,7 +64,7 @@ class NewTransaction extends StatelessWidget {
                 'Add',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              color: Colors.red[400],
+              color: Theme.of(context).primaryColor,
               textColor: Colors.white,
               onPressed: addNewTransaction,
             )
