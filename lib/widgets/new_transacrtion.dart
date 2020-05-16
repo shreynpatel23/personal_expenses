@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   // use this text editing comtroller to capture the input value in the variable
@@ -11,21 +12,42 @@ class NewTransaction extends StatefulWidget {
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-  final titleController = TextEditingController();
-
-  final amountController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
+  DateTime _selectedDate;
 
   void addNewTransaction() {
-    final enteredAmount = double.parse(amountController.text);
-    if (titleController.text == '') {
+    if (_amountController.text.isEmpty) {
       return;
     }
-    if (amountController.text == '' || enteredAmount < 0) {
+    final enteredAmount = double.parse(_amountController.text);
+    if (_titleController.text == '' ||
+        enteredAmount < 0 ||
+        _selectedDate == null) {
       return;
     }
-    widget.onAddNewTransaction(titleController.text, enteredAmount);
+    widget.onAddNewTransaction(
+        _titleController.text, enteredAmount, _selectedDate);
     // to close the top most screen use the navigator.pop method
     Navigator.of(context).pop();
+  }
+
+  void openDatePickerModal() {
+    // showDatePicker is inbuilt method for date picker modal.
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2020),
+            lastDate: DateTime.now())
+        .then((date) {
+      if (date == null) {
+        return;
+      }
+      ;
+      setState(() {
+        _selectedDate = date;
+      });
+    });
   }
 
   @override
@@ -40,7 +62,7 @@ class _NewTransactionState extends State<NewTransaction> {
             TextField(
               decoration: InputDecoration(labelText: 'Title'),
               // controller property is used for mapping the values in the TextEditController
-              controller: titleController,
+              controller: _titleController,
               // the underscore means that we do not care about the value
               // the reason we have to use it is because onSubmitted always requires a string but we do not use the string so (_) is used
               onSubmitted: (_) => addNewTransaction(),
@@ -48,7 +70,7 @@ class _NewTransactionState extends State<NewTransaction> {
             TextField(
               decoration: InputDecoration(labelText: 'Amount'),
               // controller property is used for mapping the values in the TextEditController
-              controller: amountController,
+              controller: _amountController,
               // use the keyboard type attribute to choose the type of keyboard
               keyboardType: TextInputType.number,
               // the underscore means that we do not care about the value
@@ -57,6 +79,24 @@ class _NewTransactionState extends State<NewTransaction> {
             ),
             SizedBox(
               height: 10,
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(_selectedDate == null
+                      ? 'No Date chosen'
+                      : 'Selected Date: ${DateFormat.yMd().format(_selectedDate)}'),
+                ),
+                FlatButton(
+                  onPressed: openDatePickerModal,
+                  child: Text(
+                    'Choose Date',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor),
+                  ),
+                )
+              ],
             ),
             RaisedButton(
               padding: EdgeInsets.all(10),
