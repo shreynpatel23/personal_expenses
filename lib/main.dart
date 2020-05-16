@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './widgets/chart.dart';
 import './widgets/new_transacrtion.dart';
 import './widgets/transaction_list.dart';
 import './services/transaction.dart';
@@ -22,12 +23,12 @@ class _HomePageState extends State<HomePage> {
   ];
 
   // use this method for adding a new transaction.
-  void addNewTransaction(String title, double amount) {
+  void addNewTransaction(String title, double amount, DateTime selectedDate) {
     final newTx = Transaction(
         title: title,
         amount: amount,
-        date: DateTime.now(),
-        id: DateTime.now().toString());
+        date: selectedDate,
+        id: selectedDate.toString());
     setState(() {
       _transactions.add(newTx);
     });
@@ -45,6 +46,12 @@ class _HomePageState extends State<HomePage> {
             child: NewTransaction(onAddNewTransaction: addNewTransaction),
           );
         });
+  }
+
+  List<Transaction> get _recentTransaction {
+    return _transactions.where((tx) {
+      return tx.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
+    }).toList();
   }
 
   @override
@@ -67,21 +74,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Card(
-                  margin: EdgeInsets.all(15),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                      'Graph will come here',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  elevation: 5,
-                  color: Theme.of(context).primaryColor,
-                ),
+                Chart(_recentTransaction),
                 // list of transactions will come here
                 TransactionList(
                   userTransaction: _transactions,

@@ -25,10 +25,6 @@ class TransactionList extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                    // decoration: BoxDecoration(
-                    //   border: Border.all(
-                    //       color: Theme.of(context).primaryColor, width: 1),
-                    // ),
                     padding: EdgeInsets.all(10),
                     child: Text(
                       // use this ToStringAsFixed property of string to round off the decimal to 2 values.
@@ -39,19 +35,23 @@ class TransactionList extends StatelessWidget {
                           color: Theme.of(context).primaryColor),
                     ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        userTransaction[index].title,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                      Text(
-                        DateFormat.yMMMd().format(userTransaction[index].date),
-                        style: TextStyle(fontSize: 14, color: Colors.grey[400]),
-                      ),
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          userTransaction[index].title,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        Text(
+                          DateFormat.yMMMd()
+                              .format(userTransaction[index].date),
+                          style:
+                              TextStyle(fontSize: 14, color: Colors.grey[400]),
+                        ),
+                      ],
+                    ),
                   ),
                   Container(
                       padding: EdgeInsets.all(10),
